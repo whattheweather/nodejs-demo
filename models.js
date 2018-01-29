@@ -13,7 +13,7 @@ const supportCompaniesSchema = new Schema({
   leader: String, // 领导
   others: String, // 其他联系人
   expire:  String, // 过期联系人
-  contribution:  String, // 贡献评级 3 - 优秀，2 - 良好，1 - 合格，0 - 差
+  contribution:  String, // 贡献评级
   remark: String, // 备注
   detail: { // 贡献详情
     重大漏洞及安全事件预警支撑: [String], // 重大漏洞及安全事件预警支撑
@@ -40,7 +40,7 @@ exports.keys = {
     '领导', '其他联系人', '过期联系人', '贡献评级'],
   todo: ['name', 'rate', 'status', 'contact', 'charge',
     'leader', 'others', 'expire', 'contribution', 'remark'],
-  todoCn: ['单位名称', '级别', '状态', '联系人', '负责人',
+  todoCn: ['单位名称', '拟申请级别', '状态', '联系人', '负责人',
     '领导', '其他联系人', '过期联系人', '贡献评级', '备注'],
   did: ['name', 'rate', 'lot', 'contact', 'charge',
     'leader', 'others', 'expire', 'contribution', 'remark'],

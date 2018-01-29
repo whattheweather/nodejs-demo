@@ -11,11 +11,10 @@ exports.csv2doc = ({ buf, keys, keysCn, type }) => {
       let header = result[0]
       let keysNum = keys.length
       let index = {};
-      for (let i = 0; i < header.length; i ++) {
-        for (let j = 0; j < keysNum; j ++) {
-          if (header[i] === keysCn[j]) index[keys[j]] =i
-        }
-      }
+      for (let i = 0; i < header.length; i ++)
+        for (let j = 0; j < keysNum; j ++)
+          if (header[i] === keysCn[j])
+            index[keys[j]] = i
       let docs = []
       for (let i = 1; i < result.length; i ++) {
         let tmp = {}
@@ -56,9 +55,9 @@ exports.checkType = path => {
   }
 }
 
-exports.xlsx2doc = (buffer, keys) => {
+exports.xlsx2doc = (buf, keys) => {
   return new Promise((resolve, reject) => {
-    let sheet = XLSX.read(buffer, {type:'buffer'}).Sheets.Sheet1
+    let sheet = XLSX.read(buf, {type:'buffer'}).Sheets.Sheet1
     let data = XLSX.utils.sheet_to_json(sheet, { header: 1 })
     let obj = {}
     let header
