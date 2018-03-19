@@ -13,15 +13,29 @@ const models = require('./models.js')
     destination: (req, file, cb) => {
       let parentDir = __dirname + '\\pdf\\' + req.params.id
       let childDir = __dirname + '\\pdf\\' + req.params.id + '\\' + req.params.type
-      if (!fs.existsSync(parentDir))
+      if (!fs.existsSync(parentDir)) {
         fs.mkdirSync(parentDir)
-      if (!fs.existsSync(childDir))
         fs.mkdirSync(childDir)
+      }
       cb(null, childDir)
     },
     filename: (req, file, cb) => { cb(null, file.originalname) },
   })
   uploadDest = multer({ storage: diskStorage })
+
+if (!fs.existsSync('./csv')) {
+  fs.mkdirSync('./csv')
+  fs.mkdirSync('./csv/did')
+  fs.mkdirSync('./csv/do')
+  fs.mkdirSync('./csv/todo')
+}
+
+if (!fs.existsSync('./download')) {
+  fs.mkdirSync('./download')
+  fs.mkdirSync('./download/did')
+  fs.mkdirSync('./download/do')
+  fs.mkdirSync('./download/todo')
+}
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
