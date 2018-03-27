@@ -32,14 +32,15 @@ exports.doc2csv = ({ data, keys, keysCn, dir }) => {
     let newData = []
     data.forEach(val => {
       let newVal = {}
-      for (let i = 0; i < keys.length; i ++) newVal[keysCn[i]] = val[keys[i]]
+      for (let i = 0; i < keys.length; i ++)
+        newVal[keysCn[i]] = val[keys[i]] ? val[keys[i]].replace(/\n/g, ' ') : ''
       newData.push(newVal)
     })
     json2csv({ data: newData, fields: keysCn }, (err, csv) => {
       let newCsv = iconv.encode(csv, 'GBK')
-      let path = Date.parse(new Date()) / 1000
-      path = __dirname + '\\csv' + dir + '\\' + path + '.csv'
-      fs.writeFile(path, newCsv, (err) => { resolve(path) })
+      let random = Date.parse(new Date()) / 1000
+      filename = `./csv${dir}/${random}.csv`
+      fs.writeFile(filename, newCsv, err => { resolve(filename) })
     })
   })
 }

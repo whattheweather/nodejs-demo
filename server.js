@@ -9,19 +9,19 @@ const models = require('./models.js')
   multer  = require('multer')
   memoryStorage = multer.memoryStorage()
   uploadStorage = multer({ storage: memoryStorage })
-  diskStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      let parentDir = __dirname + '\\pdf\\' + req.params.id
-      let childDir = __dirname + '\\pdf\\' + req.params.id + '\\' + req.params.type
-      if (!fs.existsSync(parentDir)) {
-        fs.mkdirSync(parentDir)
-        fs.mkdirSync(childDir)
-      }
-      cb(null, childDir)
-    },
-    filename: (req, file, cb) => { cb(null, file.originalname) },
-  })
-  uploadDest = multer({ storage: diskStorage })
+  // diskStorage = multer.diskStorage({
+  //   destination: (req, file, cb) => {
+  //     let parentDir = `./pdf/${req.params.id}`
+  //     let childDir = `./pdf/${req.params.id}/${req.params.type}`
+  //     if (!fs.existsSync(parentDir)) {
+  //       fs.mkdirSync(parentDir)
+  //       fs.mkdirSync(childDir)
+  //     }
+  //     cb(null, childDir)
+  //   },
+  //   filename: (req, file, cb) => { cb(null, file.originalname) },
+  // })
+  // uploadDest = multer({ storage: diskStorage })
 
 if (!fs.existsSync('./csv')) {
   fs.mkdirSync('./csv')
@@ -36,12 +36,11 @@ if (!fs.existsSync('./download')) {
   fs.mkdirSync('./download/do')
   fs.mkdirSync('./download/todo')
 }
-// app.use('/zcdw', express.static('public'))
 app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.get('/api/zcdw/:path', (req, res) => {
+app.get('/api/:path', (req, res) => {
   let type = functions.checkType(req.params.path)
   let query = { type: type }
   if (req.query.lot && req.query.lot !== 'all') query['lot'] = req.query.lot
@@ -50,7 +49,7 @@ app.get('/api/zcdw/:path', (req, res) => {
   })
 })
 
-app.put('/api/zcdw/:path', (req, res) => {
+app.put('/api/:path', (req, res) => {
   let operations = []
   for (let id of req.body.ids) {
     operations.push({
@@ -65,13 +64,13 @@ app.put('/api/zcdw/:path', (req, res) => {
   })
 })
 
-app.delete('/api/zcdw/:path', (req, res) => {
+app.delete('/api/:path', (req, res) => {
   database.remove({ _id: { $in: req.body.ids } }).then(() => {
     res.send('OK')
   })
 })
 
-app.get('/api/zcdw/:path/csv', (req, res) => {
+app.get('/api/:path/csv', (req, res) => {
   let type = functions.checkType(req.params.path)
   let query = { type: type }
   if (req.query.lot && req.query.lot !== 'all') query['lot'] = req.query.lot
@@ -100,7 +99,7 @@ app.get('/api/zcdw/:path/csv', (req, res) => {
   })
 })
 
-app.post('/api/zcdw/:path/csv', uploadStorage.single('csv'), (req, res) => {
+app.post('/api/:path/csv', uploadStorage.single('csv'), (req, res) => {
   let data = req.file.buffer
   let type = functions.checkType(req.params.path)
   functions.csv2doc({ buf: data, keys: keys.info, keysCn: keys.infoCn, type: type})
@@ -111,19 +110,19 @@ app.post('/api/zcdw/:path/csv', uploadStorage.single('csv'), (req, res) => {
   })
 })
 
-app.put('/api/zcdw/:path/:id', (req, res) => {
+app.put('/api/:path/:id', (req, res) => {
   database.update({ _id: req.params.id }, req.body).then(result => {
     result.ok === 1 && res.end()
   })
 })
 
-app.get('/api/zcdw/:path/:id/detail', (req, res) => {
+app.get('/api/:path/:id/detail', (req, res) => {
   database.findOne({ _id: req.params.id }).then(doc => {
     res.json(doc)
   }) 
 })
 
-app.post('/api/zcdw/:path/:id/detail', uploadStorage.single('detail'), 
+app.post('/api/:path/:id/detail', uploadStorage.single('detail'), 
   (req, res) => {
     functions.xlsx2doc(req.file.buffer, keys.detail).then(doc => {
       database.update({ _id: req.params.id }, { detail: doc }).then(() => {
@@ -132,4 +131,4 @@ app.post('/api/zcdw/:path/:id/detail', uploadStorage.single('detail'),
     })
   })
 
-app.listen(8000)
+app.listen(80)
