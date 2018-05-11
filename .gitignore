@@ -60,3 +60,7 @@ typings/
 build/
 
 public/
+
+csv/
+
+download/
