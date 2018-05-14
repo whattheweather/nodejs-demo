@@ -33,7 +33,7 @@ exports.doc2csv = ({ data, keys, keysCn, dir }) => {
     data.forEach(val => {
       let newVal = {}
       for (let i = 0; i < keys.length; i ++)
-        newVal[keysCn[i]] = val[keys[i]] ? val[keys[i]].replace(/\n/g, ' ') : ''
+        newVal[keysCn[i]] = val[keys[i]] ? val[keys[i]].replace(/\n/g, ' ').replace(/\\n/g, ' ') : ''
       newData.push(newVal)
     })
     json2csv({ data: newData, fields: keysCn }, (err, csv) => {
